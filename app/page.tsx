@@ -258,7 +258,7 @@ export default function Home() {
         <div className="mint-details-grid">
           <div className="mint-detail-item">
             <h3>Chain</h3>
-            <p>Somnia Testnet (Shannon)</p>
+            <p>Somnia Testnet</p>
           </div>
           <div className="mint-detail-item">
             <h3>Supply</h3>
@@ -386,7 +386,7 @@ export default function Home() {
           {/* Guaranteed */}
           <div className="status-card">
             <div className="status-card-header">
-              <h3>The Chosen Ones (Guaranteed)</h3>
+              <h3>The Chosen (Guaranteed)</h3>
               <span className="status-badge">
                 {!address ? 'Connect Wallet' :
                  checking ? 'Checking...' :
@@ -401,7 +401,7 @@ export default function Home() {
           {/* FCFS Allowlist */}
           <div className="status-card">
             <div className="status-card-header">
-              <h3>The Seekers (FCFS Allowlist)</h3>
+              <h3>The Seekers (FCFS)</h3>
               <span className="status-badge">
                 {!address ? 'Connect Wallet' :
                  checking ? 'Checking...' :
