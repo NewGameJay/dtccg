@@ -359,12 +359,26 @@ body::after {
     padding: 1rem;
   }
 
+  .card{
+    padding: 1rem !important;
+    width: 110% !important;
+  }
+  
+  .mint-details{
+    width: 100% !important;
+    padding: 1rem !important;
+  }
+
   .mint-status-header h2 {
-    font-size: 1.4rem;
+    font-size: 1.2rem !important;
+    white-space: nowrap;
   }
 
   .mint-status-header .current-phase {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
+    width: fit-content;
+    text-align: center;
+    white-space: nowrap;
   }
 
   .button, .wallet-checker.css-hw2qa1 {
@@ -381,6 +395,12 @@ body::after {
     font-size: 1rem;
   }
 
+  .status-card-header span{
+    font-size: 0.5rem;
+    padding: .25rem;
+    white-space: nowrap;
+  }
+
   .status-card p {
     font-size: 0.85rem;
   }
@@ -390,12 +410,29 @@ body::after {
     grid-template-columns: 1fr !important;
     gap: 2rem;
     text-align: center;
+    padding: 0rem !important;
   }
 
   .game-content,
   .perks-content {
-    padding: 1rem;
+    padding: 0rem !important;
     order: 1;
+  }
+
+  .perks-content{
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .perks-content li::after{
+    display: none !important;
+  }
+
+  .perks-content li{
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .game-media,
@@ -412,6 +449,10 @@ body::after {
   .section-text {
     font-size: 1rem;
     line-height: 1.6;
+  }
+
+  .mint-status {
+    padding: 1rem !important;
   }
 }
 
