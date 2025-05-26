@@ -23,11 +23,11 @@ const somniaChain: Chain = {
   chain: "Somnia Testnet",
   name: "Somnia Testnet",
   // Added block gas limit
-  blockExplorer: {
+  explorers: [{
     name: "Somnia Explorer",
-    url: "https://explorer.somnia.network"
-  },
-  gasLimit: 8333094
+    url: "https://explorer.somnia.network",
+    standard: "EIP3091"
+  }]
 } as const;
 
 // Configure query client for better performance
