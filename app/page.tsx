@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { useAddress, useContract, useContractRead, ConnectWallet } from '@thirdweb-dev/react';
+import { useAddress, useContract, useContractRead, ConnectWallet, useSDK } from '@thirdweb-dev/react';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,8 @@ export default function Home() {
   const [isFCFSWL, setIsFCFSWL] = useState(false);
   const [eligibilityChecked, setEligibilityChecked] = useState(false);
   const [mintedPhases, setMintedPhases] = useState<string[]>([]);
-  const [remainingSupply, setRemainingSupply] = useState(0);
+  const [totalMinted, setTotalMinted] = useState(0);
+  const [maxSupply, setMaxSupply] = useState(0);
   const [hasActiveCondition, setHasActiveCondition] = useState(false);
   const [nextPhaseTime, setNextPhaseTime] = useState<Date | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<{days: number; hours: number; minutes: number; seconds: number}>(
@@ -32,13 +33,34 @@ export default function Home() {
   
   const { contract } = useContract("0x967043D11cd0C2c4924F6a18A49ed960F4d2D3d0", "edition-drop");
   const address = useAddress();
+  const sdk = useSDK();
   
   const tokenId = "0";
-  
+
   // Get supply info
-  const { data: maxSupply } = useContractRead(contract, "maxTotalSupply", [tokenId]);
-  const { data: claimedSupply } = useContractRead(contract, "balanceOf", [address || "0x", tokenId]);
-  
+  useEffect(() => {
+    const fetchSupplyData = async () => {
+      if (!contract || !sdk) return;
+      
+      try {
+        const [totalSupplyData, maxSupplyData] = await Promise.all([
+          contract.erc1155.totalSupply(tokenId),
+          contract.call("maxTotalSupply", [tokenId])
+        ]);
+
+        setTotalMinted(Number(totalSupplyData));
+        setMaxSupply(Number(maxSupplyData));
+      } catch (error) {
+        console.error('Error fetching supply data:', error);
+      }
+    };
+
+    fetchSupplyData();
+    // Set up an interval to refresh the data every 30 seconds
+    const interval = setInterval(fetchSupplyData, 30000);
+    return () => clearInterval(interval);
+  }, [contract, sdk]);
+
   // Update countdown timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -72,12 +94,6 @@ export default function Home() {
 
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    if (maxSupply && claimedSupply) {
-      setRemainingSupply(Number(maxSupply) - Number(claimedSupply));
-    }
-  }, [maxSupply, claimedSupply]);
 
   // Removed automatic eligibility check on address/contract change
   
@@ -184,7 +200,7 @@ export default function Home() {
   };
 
   const handleMint = async (stage: string) => {
-    if (!address || !contract || remainingSupply <= 0 || mintedPhases.includes(stage)) return;
+    if (!address || !contract || totalMinted >= maxSupply || mintedPhases.includes(stage)) return;
     setLoading(true);
     
     try {
@@ -262,7 +278,7 @@ export default function Home() {
           </div>
           <div className="mint-detail-item">
             <h3>Supply</h3>
-            <p>{remainingSupply} / 1,007</p>
+            <p>{maxSupply}</p>
           </div>
           <div className="mint-detail-item">
             <h3>Mint Date</h3>
@@ -281,11 +297,11 @@ export default function Home() {
           <div className="current-phase">
             {!address ? "Connect Wallet" :
              currentTime < mintTimes.guaranteed ? 
-               `Mint Starting in ${timeRemaining.days > 0 ? `${timeRemaining.days} days ` : ''}${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)}` :
+               `Mint Starts In ${timeRemaining.days > 0 ? `${timeRemaining.days} days ` : ''}${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)}` :
              currentTime < mintTimes.fcfs ? 
-               `Guaranteed Mint | ${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)}` :
-             currentTime < mintTimes.public ? 
-               `FCFS Mint | ${timeRemaining.days > 0 ? `${timeRemaining.days} days ` : ''}${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)}` :
+               `Guaranteed Mint | ${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)} remaining` :
+             currentTime < mintTimes.public ?
+               `FCFS Mint | ${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)} remaining` :
              "Public Mint"}
           </div>
         </div>
@@ -296,14 +312,14 @@ export default function Home() {
             <div 
               className="progress-fill"
               style={{
-                width: `${((1007 - remainingSupply) / 1007) * 100}%`,
-                backgroundColor: remainingSupply === 0 ? '#ff4444' : '#4CAF50'
+                width: `${(totalMinted / maxSupply) * 100}%`,
+                backgroundColor: totalMinted >= maxSupply ? '#ff4444' : '#4CAF50'
               }}
             />
           </div>
           <div className="supply-text">
-            <span>{1007 - remainingSupply} / 1007 Minted</span>
-            <span>{remainingSupply} Remaining</span>
+            <span>{totalMinted} / {maxSupply} Minted</span>
+            <span>{maxSupply - totalMinted} Remaining</span>
           </div>
         </div>
 
@@ -357,17 +373,12 @@ export default function Home() {
               <div className="flex flex-col items-center gap-2">
                 <button
                   onClick={() => handleMint(currentPhase)}
-                  disabled={loading || !eligibilityChecked || remainingSupply === 0 || 
-                    (Number(currentPhase) === 0 && !isGuaranteedWL) || 
-                    (Number(currentPhase) === 1 && !isFCFSWL) || 
-                    mintedPhases.includes(currentPhase)}
+                  disabled={loading || totalMinted >= maxSupply || !isGuaranteedWL || mintedPhases.includes('guaranteed')}
                   className="button"
                   style={{ width: '100%', height: '60px', borderRadius: '.25rem' }}
                 >
-                  {loading ? "Minting..." : 
-                   remainingSupply === 0 ? "Sold Out!" :
-                   !eligibilityChecked ? "Check Allowlist First" :
-                   mintedPhases.includes(currentPhase) ? "Already Minted!" :
+                  {!address ? "Not Connected" :
+                   loading ? "Processing..." :
                    Number(currentPhase) === 0 ? 
                      (isGuaranteedWL ? "Mint a pass" : "Not Whitelisted for Guaranteed") :
                    Number(currentPhase) === 1 ? 
@@ -467,7 +478,7 @@ export default function Home() {
       </section>
 
 
-    </main>
+      </main>
     </>
-  )
+  );
 }

@@ -556,7 +556,7 @@ body::after {
 .mint-status-header h2 {
   margin: 0;
   font-size: 1.8rem;
-  color: var(--text-color);
+  color: #EDEDED;
   font-family: 'Crimson Text', serif;
   letter-spacing: 0.05em;
 }
