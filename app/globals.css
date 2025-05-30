@@ -501,7 +501,7 @@ body::after {
 
 .mint-details h2 {
   font-size: clamp(1.5rem, 4vw, 2rem);
-  color: var(--text-gold);
+  color: #EDEDED;
   margin-bottom: 1.5rem;
   font-family: 'Crimson Text', serif;
   letter-spacing: 0.05em;
