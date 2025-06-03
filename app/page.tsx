@@ -322,14 +322,8 @@ export default function Home() {
         <div className="mint-status-header">
           <h2>Mint Status</h2>
           <div className="current-phase">
-            {!address ? "Connect Wallet" :
-             currentTime < mintTimes.guaranteed ? 
-               `Mint Starts In ${timeRemaining.days > 0 ? `${timeRemaining.days} days ` : ''}${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)}` :
-             currentTime < mintTimes.fcfs ? 
-               `Guaranteed Mint | ${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)} remaining` :
-             currentTime < mintTimes.public ?
-               `FCFS Mint | ${padNumber(timeRemaining.hours)}:${padNumber(timeRemaining.minutes)}:${padNumber(timeRemaining.seconds)} remaining` :
-             "Public Mint"}
+            {!address ? "Connect Wallet" : 
+             "MINTED OUT"}
           </div>
         </div>
 
@@ -354,23 +348,8 @@ export default function Home() {
         {nextPhaseTime && (
           <div className="countdown-timer">
             <h3>Next Phase Starts In:</h3>
-            <div className="countdown-grid">
-              <div className="countdown-item">
-                <span className="countdown-value">{timeRemaining.days}</span>
-                <span className="countdown-label">Days</span>
-              </div>
-              <div className="countdown-item">
-                <span className="countdown-value">{timeRemaining.hours}</span>
-                <span className="countdown-label">Hours</span>
-              </div>
-              <div className="countdown-item">
-                <span className="countdown-value">{timeRemaining.minutes}</span>
-                <span className="countdown-label">Minutes</span>
-              </div>
-              <div className="countdown-item">
-                <span className="countdown-value">{timeRemaining.seconds}</span>
-                <span className="countdown-label">Seconds</span>
-              </div>
+            <div className="countdown-grid" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <span className="countdown-value">MINTED OUT  </span>
             </div>
           </div>
         )}
@@ -427,6 +406,7 @@ export default function Home() {
                   {!address ? "Not Connected" :
                    loading ? "Processing..." :
                    userBalance > 0 ? "Congrats! You Have Minted" :
+                   totalMinted >= maxSupply ? "Minted Out" :
                    Number(currentPhase) === 0 ? 
                      (isGuaranteedWL ? "Mint a pass" : "Not Whitelisted for Guaranteed") :
                    Number(currentPhase) === 1 ? 
