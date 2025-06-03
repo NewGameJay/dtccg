@@ -29,7 +29,7 @@ export default function Home() {
   const mintTimes = {
     guaranteed: new Date('2025-06-03T09:00:00-04:00'), // 9 AM EST
     fcfs: new Date('2025-06-03T11:00:00-04:00'),       // 11 AM EST
-    public: new Date('2025-06-03T14:00:00-04:00')      // 2 PM EST
+    public: new Date('2025-06-03T13:00:00-04:00')      // 1 PM EST
   };
   
   const { contract } = useContract("0x967043D11cd0C2c4924F6a18A49ed960F4d2D3d0", "edition-drop");
