@@ -7,6 +7,7 @@ import { useAddress, useContract, useContractRead, ConnectWallet, useSDK } from 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(false);
+  const [userBalance, setUserBalance] = useState(0);
   const [currentPhase, setCurrentPhase] = useState("-1");
   const [isGuaranteedWL, setIsGuaranteedWL] = useState(false);
   const [isFCFSWL, setIsFCFSWL] = useState(false);
@@ -100,6 +101,14 @@ export default function Home() {
   const checkEligibility = async () => {
     if (!address || !contract) return;
     setChecking(true);
+
+    // Check user's balance
+    try {
+      const balance = await contract.erc1155.balanceOf(address, "0");
+      setUserBalance(Number(balance));
+    } catch (error) {
+      console.error('Error checking balance:', error);
+    }
     
     try {
       const tokenId = "0";
@@ -365,6 +374,26 @@ export default function Home() {
             </div>
           </div>
         )}
+
+              {/* My Collection Section */}
+      {address && userBalance > 0 && (
+        <div className="collection-section">
+          <h3>My Collection</h3>
+          <div className="flex items-center justify-center gap-4 p-6 bg-gray-800 rounded-lg">
+            <div className="text-center">
+              <Image 
+                src="/DTMint.jpeg" 
+                alt="Dark Table Pass" 
+                width={200} 
+                height={200} 
+                className="rounded-lg shadow-lg mb-4"
+              />
+              <div className="text-xl font-semibold mb-2">Under The Table Pass{userBalance > 1 ? 's' : ''}</div>
+              <div className="text-gray-400">Owned: {userBalance}</div>
+            </div>
+          </div>
+        </div>
+      )}
       </section>
 
       {/* Main Card */}
@@ -405,6 +434,7 @@ export default function Home() {
                      (!address ? "Connect Wallet" : "Mint a pass") :
                    "Mint Starts Soon!"}
                 </button>
+                <p style={{ color: 'white', fontStyle: 'italic', textAlign: 'center', marginTop: '.5rem' }}>Reminder ~ Switch to Somnia Testnet to mint!</p>
               </div>
             </div>
           )}
@@ -413,7 +443,7 @@ export default function Home() {
         {/* Status Cards */}
         <div>
           {/* Guaranteed */}
-          <div className="status-card">
+          <div className="status-card"> 
             <div className="status-card-header">
               <h3>The Chosen (Guaranteed)</h3>
               <span className="status-badge">

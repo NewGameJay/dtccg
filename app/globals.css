@@ -319,10 +319,10 @@ body::after {
 }
 
 .status-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 1rem !important;
 }
 
 .status-card h3 {
@@ -536,14 +536,38 @@ body::after {
 
 /* Mint Status Section */
 .mint-status {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 1rem 2rem;
-  margin: 0rem 0;
-  width: 100%;
-  max-width: 800px;
-  backdrop-filter: blur(12px);
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  padding: 1rem 2rem !important;
+  margin: 0rem 0 !important;
+  width: 100% !important;
+  max-width: 800px !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.status-card {
+  background: rgba(20, 12, 8, 0.85) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  padding: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  backdrop-filter: blur(12px) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.status-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 20px rgba(251, 190, 26, 0.1) !important;
+}
+
+.status-card h3 {
+  font-size: 1.25rem !important;
+  color: var(--accent-gold) !important;
+  margin: 0 !important;
+  font-family: 'Crimson Text', serif !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
 }
 
 .mint-status-header {
@@ -562,14 +586,14 @@ body::after {
 }
 
 .current-phase {
-  background: rgba(251, 190, 26, 0.1);
-  color: var(--accent-gold);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  background: rgba(251, 190, 26, 0.1) !important;
+  color: var(--accent-gold) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
 }
 
 /* Supply Progress Bar */
@@ -610,11 +634,12 @@ body::after {
   border-radius: 4px;
 }
 
-.countdown-timer h3 {
+.countdown-timer h3, .collection-section h3 {
   color: var(--text-color);
   margin-bottom: 1.5rem;
   font-size: 1.2rem;
   letter-spacing: 0.05em;
+  text-align: center;
 }
 
 .countdown-grid {
@@ -646,6 +671,26 @@ body::after {
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: 0.8;
+}
+
+.collection-section{
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  border: 1px solid var(--border-color) !important;
+  margin: 1rem 0 !important;
+  padding: 1.5rem !important;
+}
+
+.collection-section .text-center{
+  text-align: center !important;
+  align-items: center !important;
+  font-weight: bold !important;
+}
+
+.text-center img{
+  border-radius: 8px !important;
+  border: 1px solid var(--border-color) !important;
 }
 
 .game-section,
@@ -759,6 +804,30 @@ body::after {
   margin: 2rem 0 1rem;
   font-family: 'Crimson Text', serif;
   letter-spacing: 0.05em;
+}
+
+.game-description.status-card {
+  background: rgba(20, 12, 8, 0.85) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  padding: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  backdrop-filter: blur(12px) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.status-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 20px rgba(251, 190, 26, 0.1) !important;
+}
+
+.status-card h3 {
+  font-size: 1.25rem !important;
+  color: var(--accent-gold) !important;
+  margin: 0 !important;
+  font-family: 'Crimson Text', serif !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
 }
 
 .section-text {
