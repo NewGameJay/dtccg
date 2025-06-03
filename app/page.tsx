@@ -420,7 +420,7 @@ export default function Home() {
               <div className="flex flex-col items-center gap-2">
                 <button
                   onClick={() => handleMint(currentPhase)}
-                  disabled={loading || totalMinted >= maxSupply || !isGuaranteedWL || mintedPhases.includes('guaranteed') || userBalance > 0}
+                  disabled={loading || totalMinted >= maxSupply || (Number(currentPhase) === 0 && !isGuaranteedWL) || (Number(currentPhase) === 1 && !isFCFSWL) || mintedPhases.includes('guaranteed') || userBalance > 0}
                   className="button"
                   style={{ width: '100%', height: '60px', borderRadius: '.25rem' }}
                 >
