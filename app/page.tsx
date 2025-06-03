@@ -160,19 +160,37 @@ export default function Home() {
         setIsGuaranteedWL(isInPhase0);
         setIsFCFSWL(isInPhase1);
 
-        // Get the current phase and next phase time from the active condition
+        // Get the current phase based on the current time
         if (activeCondition) {
-          const phaseIndex = activeCondition.startTime ? "0" : "2";
+          setHasActiveCondition(true);
+          const now = new Date();
+          let phaseIndex;
+          
+          if (now >= mintTimes.public) {
+            phaseIndex = "2"; // Public phase
+          } else if (now >= mintTimes.fcfs) {
+            phaseIndex = "1"; // FCFS phase
+          } else if (now >= mintTimes.guaranteed) {
+            phaseIndex = "0"; // Guaranteed phase
+          } else {
+            phaseIndex = "-1"; // Not started
+          }
+          
           setCurrentPhase(phaseIndex);
           console.log('Setting current phase to:', phaseIndex);
 
-          // Set next phase time if available
-          if (activeCondition.endTime) {
-            const endTime = new Date(activeCondition.endTime.toString());
-            setNextPhaseTime(endTime);
-            console.log('Next phase starts at:', endTime);
-          } else {
-            setNextPhaseTime(null);
+          // Set next phase time
+          let nextTime = null;
+          if (now < mintTimes.guaranteed) {
+            nextTime = mintTimes.guaranteed;
+          } else if (now < mintTimes.fcfs) {
+            nextTime = mintTimes.fcfs;
+          } else if (now < mintTimes.public) {
+            nextTime = mintTimes.public;
+          }
+          setNextPhaseTime(nextTime);
+          if (nextTime) {
+            console.log('Next phase starts at:', nextTime);
           }
         } else {
           setCurrentPhase("-1"); // No active phase
